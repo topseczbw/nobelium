@@ -1,15 +1,39 @@
-import Image from 'next/image'
+// import Image from 'next/image'
 import Container from '@/components/Container'
 import TagItem from '@/components/TagItem'
-import { NotionRenderer, Equation, Code, Collection, CollectionRow } from 'react-notion-x'
+import { useEffect, useState } from 'react'
+import {
+  NotionRenderer
+} from 'react-notion-x'
 import BLOG from '@/blog.config'
 import formatDate from '@/lib/formatDate'
 import { useLocale } from '@/lib/locale'
 import { useRouter } from 'next/router'
 import Comments from '@/components/Comments'
+import { Code } from 'react-notion-x/build/third-party/code'
+import { Equation } from 'react-notion-x/build/third-party/equation'
+import dynamic from 'next/dynamic'
 
 const mapPageUrl = id => {
   return 'https://www.notion.so/' + id.replace(/-/g, '')
+}
+
+const Collection = dynamic(() =>
+  import('react-notion-x/build/third-party/collection').then(
+    (m) => m.Collection
+  )
+)
+
+export const usePrefersDarkMode = () => {
+  const [prefersDarkMode, setPrefersDarkMode] = useState(false)
+  useEffect(() => {
+    const themeMedia = window.matchMedia('(prefers-color-scheme: dark)')
+    setPrefersDarkMode(themeMedia.matches)
+    themeMedia.addEventListener('change', (e) => {
+      setPrefersDarkMode(e.matches)
+    })
+  }, [])
+  return prefersDarkMode
 }
 
 const Layout = ({
@@ -21,6 +45,7 @@ const Layout = ({
 }) => {
   const locale = useLocale()
   const router = useRouter()
+  const prefersDarkMode = usePrefersDarkMode()
   return (
     <Container
       layout="blog"
@@ -38,14 +63,7 @@ const Layout = ({
           <nav className="flex mt-7 items-start text-gray-500 dark:text-gray-400">
             <div className="flex mb-4">
               <a href={BLOG.socialLink || '#'} className="flex">
-                <Image
-                  alt={BLOG.author}
-                  width={24}
-                  height={24}
-                  src={`https://gravatar.com/avatar/${emailHash}`}
-                  className="rounded-full"
-                />
-                <p className="ml-2 md:block">{BLOG.author}</p>
+                <p className="md:block">{BLOG.author}</p>
               </a>
               <span className="block">&nbsp;/&nbsp;</span>
             </div>
@@ -70,11 +88,13 @@ const Layout = ({
             <NotionRenderer
               recordMap={blockMap}
               components={{
-                equation: Equation,
-                code: Code,
-                collection: Collection,
-                collectionRow: CollectionRow
+                Equation,
+                Code,
+                Collection
+                // collectionRow: CollectionRow
               }}
+              // darkMode={BLOG.appearance === 'dark'}
+              darkMode={prefersDarkMode}
               mapPageUrl={mapPageUrl}
             />
           </div>
