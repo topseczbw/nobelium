@@ -1,11 +1,9 @@
 /* NOTION CSS OVERRIDE */
 
 .notion {
-  /*@apply text-gray-600 dark:text-gray-300;*/
-  @apply dark:text-gray-300;
+  @apply text-gray-600 dark:text-gray-300;
   overflow-wrap: break-word;
 }
-
 .notion,
 .notion-text,
 .notion-quote,
@@ -28,7 +26,7 @@ svg + .notion-page-title-text {
 
 .notion-bookmark {
   @apply border;
-  @apply border-gray-100;
+  @apply border-purple-100;
   color: inherit;
 }
 
