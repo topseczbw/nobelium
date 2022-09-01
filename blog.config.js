@@ -1,6 +1,6 @@
 const BLOG = {
   title: 'zbw',
-  author: 'zbw',
+  author: "zbw's blog",
   email: 'zbwbiehua@163.com',
   link: 'https://loner.run',
   description: 'write bad posts',
